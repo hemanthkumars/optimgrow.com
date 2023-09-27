@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <script type = "text/javascript">
+    var watchID;
+    var geoLoc;
+
+    function showLocation(position) {
+      var latitude = position.coords.latitude;
+      var longitude = position.coords.longitude;
+      document.getElementById("location").innerText="<h3>location"+latitude.toString()+"---"+longitude.toString()+"</h3>"
+      console.log(latitude+latitude.toString());
+      //alert("Latitude : " + latitude + " Longitude: " + longitude);
+      fetch("https://long-walls-ask-157-45-128-58.loca.lt/cockpit/account/pingLocationTest")
+              .then(response => {
+                console.log(response)
+                // handle the response
+              })
+              .catch(error => {
+                console.log(error)
+                // handle the error
+              });
+
+    }
+
+    function errorHandler(err) {
+      if(err.code == 1) {
+        alert("Error: Access is denied!");
+      } else if( err.code == 2) {
+        alert("Error: Position is unavailable!");
+      }
+    }
+
+    function getLocationUpdate(){
+
+      if(navigator.geolocation){
+
+        // timeout at 60000 milliseconds (60 seconds)
+        var options = { enableHighAccuracy: true };
+        geoLoc = navigator.geolocation;
+        watchID = geoLoc.watchPosition(showLocation, errorHandler,options);
+      } else {
+        alert("Sorry, browser does not support geolocation!");
+      }
+    }
+  </script>
+  </head>
+<body>
+
+<form>
+  <input type = "button" onclick = "getLocationUpdate();" value = "Watch Update"/>
+  <div id="location"></div>
+</form>
+
+</body>
+</html>
